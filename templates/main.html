@@ -156,7 +156,10 @@
     }
 
     @keyframes blink {
-      0%, 80%, 100% {
+
+      0%,
+      80%,
+      100% {
         opacity: 0;
         transform: scale(0.8);
       }
@@ -165,6 +168,14 @@
         opacity: 1;
         transform: scale(1.2);
       }
+    }
+
+    .chat-input button {
+      margin-left: 6px;
+    }
+
+    .chat-input button.voice-active {
+      background: #e53935;
     }
   </style>
 </head>
@@ -180,6 +191,8 @@
     </div>
     <form method="POST" id="chat-form" class="chat-input">
       <input type="text" id="user-input" name="text" placeholder="Describe your symptoms..." autocomplete="off" />
+
+      <button type="button" onclick="startVoice()">🎤</button>
       <button type="button" onclick="sendMessage()">Send</button>
     </form>
   </div>
@@ -213,17 +226,61 @@
         },
         body: `text=${encodeURIComponent(message)}`,
       })
-      .then((res) => res.text())
-      .then((data) => {
-        typingDiv.remove();
-        const botMessageDiv = document.createElement("div");
-        botMessageDiv.className = "message bot";
-        botMessageDiv.innerText = data;
-        chatBody.appendChild(botMessageDiv);
-        chatBody.scrollTop = chatBody.scrollHeight;
-      });
+        .then((res) => res.text())
+        .then((data) => {
+          typingDiv.remove();
+          const botMessageDiv = document.createElement("div");
+          botMessageDiv.className = "message bot";
+          botMessageDiv.innerText = data;
+          chatBody.appendChild(botMessageDiv);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        });
     }
   </script>
+
+
+  <script>
+  let recognition;
+
+  function startVoice() {
+    if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+      alert("Your browser does not support Speech Recognition.");
+      return;
+    }
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    const micBtn = event.target;
+    micBtn.classList.add("voice-active");
+    micBtn.innerText = "🎙️";
+
+    recognition.start();
+
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript;
+      document.getElementById("user-input").value = transcript;
+      micBtn.classList.remove("voice-active");
+      micBtn.innerText = "🎤";
+      sendMessage();
+    };
+
+    recognition.onerror = function () {
+      micBtn.classList.remove("voice-active");
+      micBtn.innerText = "🎤";
+    };
+
+    recognition.onend = function () {
+      micBtn.classList.remove("voice-active");
+      micBtn.innerText = "🎤";
+    };
+  }
+</script>
 </body>
 
 </html>

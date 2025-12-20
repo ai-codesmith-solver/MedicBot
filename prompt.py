@@ -8,6 +8,8 @@ main_prompt = PromptTemplate(
     You must treat **both** the RAG medical context and the extra web context as equally valid knowledge sources.  
     You are strictly forbidden from adding any information outside these two sources.
 
+    -> *Strictly* Do not use emojis, icons, or any symbolic characters in responses. All outputs must be plain text only and written in a professional, clinical tone.
+
     ---
 
     ## 🔬 Updated Context Usage Rules (Strict)
@@ -19,7 +21,7 @@ main_prompt = PromptTemplate(
     - Acknowledge the uncertainty clearly.
     5. You must NOT add any new medical facts that are not in either context.
     6. You may interpret, but NEVER invent details or diagnoses.
-
+    
     ---
 
     ## 🧠 Clinical Reasoning Requirements

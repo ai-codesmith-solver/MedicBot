@@ -2,14 +2,24 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.document_loaders import PyMuPDFLoader
 from dotenv import load_dotenv
 import os
+from langchain_huggingface import ChatHuggingFace,HuggingFaceEndpoint
 
 load_dotenv()
 
 
 def get_llm():
-    return ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
-    api_key=os.getenv("GOOGLE_API_KEY"))
+    # return ChatGoogleGenerativeAI(
+    # model="gemini-2.5-flash",
+    # api_key=os.getenv("GOOGLE_API_KEY"))
+
+    llm=HuggingFaceEndpoint(
+    repo_id="openai/gpt-oss-120b",
+    task="text-generation"
+    )
+
+    model=ChatHuggingFace(llm=llm)
+
+    return model
 
 def load_docs(path:str):
     if path.endswith(".pdf"):

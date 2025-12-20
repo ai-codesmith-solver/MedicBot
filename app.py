@@ -6,6 +6,8 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough, Runn
 from langchain_core.output_parsers import StrOutputParser
 from agnets import get_extra_context
 from prompt import main_prompt
+from text_to_speech import speak
+import threading,time
 
 
 app = Flask(__name__)
@@ -27,6 +29,10 @@ vectore_store = create_vectore_store(docs)
 print(f"Vectore Store Loded. ✅")
 
 chat_history = []
+
+def delayed_speak(result):
+    time.sleep(0.04)
+    speak(result)
 
 
 # RAG FUNCTION 
@@ -68,6 +74,7 @@ def chat():
     # Run RAG pipeline instead of OpenAI API call
     bot_res = main_rag(user_inp)
 
+    threading.Thread(target=delayed_speak, args=(bot_res,), daemon=True).start()
     return bot_res
 
 
