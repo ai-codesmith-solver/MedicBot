@@ -8,18 +8,18 @@ load_dotenv()
 
 
 def get_llm():
-    # return ChatGoogleGenerativeAI(
-    # model="gemini-2.5-flash",
-    # api_key=os.getenv("GOOGLE_API_KEY"))
+    return ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    api_key=os.getenv("GOOGLE_API_KEY"))
 
-    llm=HuggingFaceEndpoint(
-    repo_id="openai/gpt-oss-120b",
-    task="text-generation"
-    )
+    # llm=HuggingFaceEndpoint(
+    # repo_id="openai/gpt-oss-120b",
+    # task="text-generation"
+    # )
 
-    model=ChatHuggingFace(llm=llm)
+    # model=ChatHuggingFace(llm=llm)
 
-    return model
+    # return model
 
 def load_docs(path:str):
     if path.endswith(".pdf"):
